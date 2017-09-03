@@ -4,11 +4,15 @@
   "description": "MEAN blog backend.",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
   },
   "author": "moeabdol <mohd.a.saed@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "eslint": "^4.6.0"
+  },
+  "dependencies": {
+    "express": "^4.15.4",
+    "mongoose": "^4.11.9"
   }
 }

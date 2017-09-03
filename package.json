@@ -1,0 +1,14 @@
+{
+  "name": "mean-blog-backend",
+  "version": "1.0.0",
+  "description": "MEAN blog backend.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "moeabdol <mohd.a.saed@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^4.6.0"
+  }
+}

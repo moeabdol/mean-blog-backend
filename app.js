@@ -1,17 +1,17 @@
-const express  = require("express");
-const mongoose = require("mongoose");
-const config   = require("./config");
-const app      = express();
+const express     = require("express");
+const bodyParser  = require("body-parser");
+const usersRoutes = require("./routes/users");
+const app         = express();
 
-mongoose.Promise = global.Promise;
-mongoose.connect(config.uri,{
-  keepAlive: true,
-  reconnectTries: Number.MAX_VALUE,
-  useMongoClient: true
-}, (err) => {
-  if (err) console.log("Could not connect to database", err);
-  else console.log("Connected to database", config.db);
-});
+if (!process.env.NODE_ENV) {
+  process.env.NODE_ENV = "development";
+}
+
+require("./config/mongoose");
+
+app.use(bodyParser.json());
+
+app.use("/api", usersRoutes);
 
 app.get("*", (req, res) => {
   res.send("<h1>Hello, World!</h1>");

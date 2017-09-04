@@ -79,6 +79,52 @@ const register = (req, res) => {
   });
 };
 
+const checkEmail = (req, res) => {
+  if (!req.params.email) return res.status(400).json({
+    message: "Email was not provided!"
+  });
+
+  User.findOne({ email: req.params.email }, (err, user) => {
+    if (err) return res.status(500).json({
+      message: "Something went wrong!",
+      error: err
+    });
+
+    if (user) {
+      res.status(200).json({ found: true, message: "Email already taken!" });
+    } else {
+      res.status(200).json({ found: false, message: "Email is available." });
+    }
+  });
+};
+
+const checkUsername = (req, res) => {
+  if (!req.params.username) return res.status(400).json({
+    message: "Username was not provided!"
+  });
+
+  User.findOne({ username: req.params.username }, (err, user) => {
+    if (err) return res.status(500).json({
+      message: "Something went wrong!",
+      error: err
+    });
+
+    if (user) {
+      res.status(200).json({
+        found: true,
+        message: "Username already taken!"
+      });
+    } else {
+      res.status(200).json({
+        found: false,
+        message: "Username is available."
+      });
+    }
+  });
+};
+
 module.exports = {
-  register
+  register,
+  checkEmail,
+  checkUsername
 };

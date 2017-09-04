@@ -1,5 +1,6 @@
 const express     = require("express");
 const bodyParser  = require("body-parser");
+const cors        = require("cors");
 const usersRoutes = require("./routes/users");
 const app         = express();
 
@@ -8,6 +9,8 @@ if (!process.env.NODE_ENV) {
 }
 
 require("./config/mongoose");
+
+app.use(cors());
 
 app.use(bodyParser.json());
 

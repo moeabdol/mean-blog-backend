@@ -113,11 +113,11 @@ const login = (req, res) => {
       });
 
       const token = jwt.sign({ userId: user._id }, config.secret, {
-        expiresIn: 60
+        expiresIn: "7d"
       });
 
       res.status(200).json({
-        token: "JWT " + token,
+        token: token,
         user: {
           id: user._id,
           username: user.username,
@@ -173,9 +173,46 @@ const checkUsername = (req, res) => {
   });
 };
 
+const show = (req, res) => {
+  User.findById(req.decoded.userId, (err, user) => {
+    if (err) return res.status(500).json({
+      message: "Something went wrong!",
+      error: err
+    });
+
+    if (!user) return res.status(400).json({
+      message: "User not found!"
+    });
+
+    res.status(200).json({
+      id: user._id,
+      username: user.username,
+      email: user.email
+    });
+  });
+};
+
+const checkAuthorized = (req, res, next) => {
+  const token = req.headers.authorization;
+  if (!token) return res.status(403).json({
+    message: "No token provided!"
+  });
+
+  jwt.verify(token, config.secret, (err, decoded) => {
+    if (err) return res.status(403).json({
+      message: "Invalid token!",
+      error: err
+    });
+    req.decoded = decoded;
+    next();
+  });
+};
+
 module.exports = {
   register,
   login,
   checkEmail,
-  checkUsername
+  checkUsername,
+  show,
+  checkAuthorized
 };

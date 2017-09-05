@@ -79,6 +79,40 @@ const register = (req, res) => {
   });
 };
 
+const login = (req, res) => {
+  if (!req.body.username) return res.status(400).json({
+    message: "Username must be provided!"
+  });
+  if (!req.body.password) return res.status(400).json({
+    message: "Password must be provided!"
+  });
+
+  User.findOne({ username: req.body.username.toLowerCase() }, (err, user) => {
+    if (err) return res.status(500).json({
+      message: "Something went wrong!",
+      error: err
+    });
+    if (!user) return res.status(400).json({
+      message: "User not found!"
+    });
+
+    user.comparePassword(req.body.password, (err, isMatch) => {
+      if (err) return res.status(500).json({
+        message: "Something went wrong!",
+        error: err
+      });
+
+      if (!isMatch) return res.status(403).json({
+        message: "Wrong password!"
+      });
+
+      res.status(200).json({
+        message: "User logged in successfully."
+      });
+    });
+  });
+};
+
 const checkEmail = (req, res) => {
   if (!req.params.email) return res.status(400).json({
     message: "Email was not provided!"
@@ -125,6 +159,7 @@ const checkUsername = (req, res) => {
 
 module.exports = {
   register,
+  login,
   checkEmail,
   checkUsername
 };

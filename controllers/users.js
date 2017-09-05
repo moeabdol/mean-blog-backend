@@ -1,4 +1,6 @@
-const User = require("../models/user");
+const jwt    = require("jsonwebtoken");
+const User   = require("../models/user");
+const config = require("../config/config");
 
 const register = (req, res) => {
   if (!req.body.email) {
@@ -6,11 +8,13 @@ const register = (req, res) => {
       message: "Email must be provided!"
     });
   }
+
   if (!req.body.username) {
     return res.status(400).json({
       message: "Username must be provided!"
     });
   }
+
   if (!req.body.password) {
     return res.status(400).json({
       message: "Password must be provided!"
@@ -83,6 +87,7 @@ const login = (req, res) => {
   if (!req.body.username) return res.status(400).json({
     message: "Username must be provided!"
   });
+
   if (!req.body.password) return res.status(400).json({
     message: "Password must be provided!"
   });
@@ -92,6 +97,7 @@ const login = (req, res) => {
       message: "Something went wrong!",
       error: err
     });
+
     if (!user) return res.status(400).json({
       message: "User not found!"
     });
@@ -106,8 +112,17 @@ const login = (req, res) => {
         message: "Wrong password!"
       });
 
+      const token = jwt.sign({ userId: user._id }, config.secret, {
+        expiresIn: 60
+      });
+
       res.status(200).json({
-        message: "User logged in successfully."
+        token: "JWT " + token,
+        user: {
+          id: user._id,
+          username: user.username,
+          email: user.email
+        }
       });
     });
   });

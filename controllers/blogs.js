@@ -1,5 +1,19 @@
 const Blog = require("../models/blog");
-const jwt  = require("jsonwebtoken");
+
+const index = (req, res) => {
+  Blog.find({}, (err, blogPosts) => {
+    if (err) return res.status(500).json({
+      message: "Something went wrong!",
+      error: err
+    });
+
+    if (!blogPosts) return res.status(404).json({
+      message: "Blog posts not found!"
+    });
+
+    res.status(200).json(blogPosts);
+  }).sort({ _id: -1 });
+};
 
 const create = (req, res) => {
   if (!req.body.title) return res.status(400).json({
@@ -35,5 +49,6 @@ const create = (req, res) => {
 };
 
 module.exports = {
+  index,
   create
 };

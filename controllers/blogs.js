@@ -17,8 +17,8 @@ const index = (req, res) => {
 
 const show = (req, res) => {
   Blog.findOne({ _id: req.params.id }, (err, blogPost) => {
-    if (err) return res.status(500).json({
-      message: "Something went wrong!",
+    if (err) return res.status(404).json({
+      message: "Blog post not found!",
       error: err
     });
 

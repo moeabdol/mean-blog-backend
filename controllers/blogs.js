@@ -63,8 +63,42 @@ const create = (req, res) => {
   res.status(201).json({ message: "Blog post created successfully." });
 };
 
+const update = (req, res) => {
+  Blog.findOne({ _id: req.params.id }, (err, blogPost) => {
+    if (err) return res.status(400).json({
+      message: "Not valid blog post id",
+      error: err
+    });
+
+    if (!blogPost) return res.status(404).json({
+      message: "Blog post not found!"
+    });
+
+    if (req.decoded.username !== blogPost.createdBy) {
+      return res.status(403).json({
+        message: "Action not permitted."
+      });
+    }
+
+    if (req.body.title) blogPost.title = req.body.title;
+    if (req.body.body) blogPost.body = req.body.body;
+    blogPost.save((err) => {
+      if (err) return res.status(500).json({
+        message: "Something went wrong!",
+        error: err
+      });
+
+      res.status(200).json({
+        message: "Blog post updated successfully."
+      });
+    });
+
+  });
+};
+
 module.exports = {
   index,
   show,
-  create
+  create,
+  update
 };

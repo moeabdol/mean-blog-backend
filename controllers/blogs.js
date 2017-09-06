@@ -31,7 +31,7 @@ const create = (req, res) => {
     }
   });
 
-  res.status(201).json({ blog: newBlog });
+  res.status(201).json({ message: "Blog post created successfully." });
 };
 
 module.exports = {

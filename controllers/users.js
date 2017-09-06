@@ -112,7 +112,10 @@ const login = (req, res) => {
         message: "Wrong password!"
       });
 
-      const token = jwt.sign({ userId: user._id }, config.secret, {
+      const token = jwt.sign({
+        id: user._id,
+        username: user.username,
+      }, config.secret, {
         expiresIn: "7d"
       });
 

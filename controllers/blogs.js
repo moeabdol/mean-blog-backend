@@ -15,6 +15,21 @@ const index = (req, res) => {
   }).sort({ _id: -1 });
 };
 
+const show = (req, res) => {
+  Blog.findOne({ _id: req.params.id }, (err, blogPost) => {
+    if (err) return res.status(500).json({
+      message: "Something went wrong!",
+      error: err
+    });
+
+    if (!blogPost) return res.status(404).json({
+      message: "Blog post not found!"
+    });
+
+    res.status(200).json(blogPost);
+  });
+};
+
 const create = (req, res) => {
   if (!req.body.title) return res.status(400).json({
     message: "Blog title is required"
@@ -50,5 +65,6 @@ const create = (req, res) => {
 
 module.exports = {
   index,
+  show,
   create
 };

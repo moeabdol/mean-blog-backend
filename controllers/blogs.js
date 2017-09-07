@@ -92,7 +92,31 @@ const update = (req, res) => {
         message: "Blog post updated successfully."
       });
     });
+  });
+};
 
+const destroy = (req, res) => {
+  Blog.findOne({ _id: req.params.id }, (err, blogPost) => {
+    if (err) return res.status(400).json({
+      message: "Not a valid blog post id!"
+    });
+
+    if (!blogPost) return res.status(404).json({
+      message: "Blog post not found!"
+    });
+
+    if (req.decoded.username !== blogPost.createdBy) return res.status(403)
+      .json({ message: "Action not permitted!" });
+
+    blogPost.remove((err) => {
+      if (err) return res.status(500).json({
+        messsage: "Something went wrong!"
+      });
+
+      res.status(200).json({
+        message: "Blog post deleted successfully."
+      });
+    });
   });
 };
 
@@ -100,5 +124,6 @@ module.exports = {
   index,
   show,
   create,
-  update
+  update,
+  destroy
 };
